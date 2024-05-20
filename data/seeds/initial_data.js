@@ -1,4 +1,3 @@
-// initial_data.js
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
