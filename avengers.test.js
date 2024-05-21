@@ -28,9 +28,9 @@ afterEach(async () => {
 describe('Avengers API', () => {
   it('should create a new avenger', async () => {
     const newAvenger = {
-      name: '',
-      superpower: '',
-      enemy: ''
+      name: 'Spider-Man',
+      superpower: 'Spider-like abilities',
+      enemy: 'Green Goblin'
     };
 
     const response = await request(server).post('/avengers').send(newAvenger);

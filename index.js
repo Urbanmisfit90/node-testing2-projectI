@@ -33,9 +33,12 @@ app.get("/avengers/:id", async (req, res) => {
 
 app.post("/avengers", async (req, res) => {
   const avengerData = req.body;
+  // Check if all required fields are present
+  if (!avengerData.name || !avengerData.superpower || !avengerData.enemy) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
   try {
-    const [newAvengerId] = await avengersModel.createAvenger(avengerData);
-    // No need for a separate getAvengerById call here
+    await avengersModel.createAvenger(avengerData); // Removed the unused variable
     res.status(201).json({ message: "Avenger created successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -45,6 +48,10 @@ app.post("/avengers", async (req, res) => {
 app.put("/avengers/:id", async (req, res) => {
   const { id } = req.params;
   const avengerData = req.body;
+  // Validate that 'superpower' field is present for update
+  if (!avengerData.superpower) {
+    return res.status(400).json({ message: "Missing required 'superpower' field" });
+  }
   try {
     const updatedCount = await avengersModel.updateAvenger(id, avengerData);
     if (updatedCount === 0) {
