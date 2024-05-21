@@ -35,8 +35,8 @@ app.post("/avengers", async (req, res) => {
   const avengerData = req.body;
   try {
     const [newAvengerId] = await avengersModel.createAvenger(avengerData);
-    const newAvenger = await avengersModel.getAvengerById(newAvengerId);
-    res.status(201).json(newAvenger);
+    // No need for a separate getAvengerById call here
+    res.status(201).json({ message: "Avenger created successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -75,4 +75,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-module.exports = app; // Export the app for testing
+module.exports = app;
