@@ -2,7 +2,6 @@ const express = require("express");
 const avengersModel = require("./avengers/avengers-model");
 
 const app = express();
-const PORT = process.env.PORT || 9000;
 
 app.use(express.json());
 
@@ -35,7 +34,7 @@ app.get("/avengers/:id", async (req, res) => {
 app.post("/avengers", async (req, res) => {
   const avengerData = req.body;
   try {
-    const newAvengerId = await avengersModel.createAvenger(avengerData);
+    const [newAvengerId] = await avengersModel.createAvenger(avengerData);
     const newAvenger = await avengersModel.getAvengerById(newAvengerId);
     res.status(201).json(newAvenger);
   } catch (error) {
@@ -76,6 +75,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal Server Error" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+module.exports = app; // Export the app for testing
