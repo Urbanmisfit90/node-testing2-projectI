@@ -71,4 +71,85 @@ describe('Avengers API', () => {
     expect(response.status).toBe(200);
     expect(response.body.message).toBe('Avenger deleted successfully');
   });
-});
+  // Additional Tests
+  it('should return 400 for creating an avenger with missing fields', async () => {
+    const newAvenger = {
+      name: 'Spider-Man'
+      // Missing superpower and enemy fields
+    };
+
+    const response = await request(server).post('/avengers').send(newAvenger);
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Missing required fields');
+  });
+
+  it('should return 404 for getting an avenger that does not exist', async () => {
+    const response = await request(server).get('/avengers/999');
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Avenger not found');
+  });
+
+  it('should return 404 for updating an avenger that does not exist', async () => {
+    const updatedAvenger = {
+      name: 'Non-Existent Avenger',
+      superpower: 'Unknown',
+      enemy: 'Unknown'
+    };
+
+    const response = await request(server).put('/avengers/999').send(updatedAvenger);
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Avenger not found');
+  });
+
+  it('should return 404 for deleting an avenger that does not exist', async () => {
+    const response = await request(server).delete('/avengers/999');
+    expect(response.status).toBe(404);
+    expect(response.body.message).toBe('Avenger not found');
+  });
+
+  it('should create multiple avengers and verify count', async () => {
+    const newAvengers = [
+      { name: 'Black Panther', superpower: 'Enhanced strength and agility', enemy: 'Killmonger' },
+      { name: 'Doctor Strange', superpower: 'Master of the mystic arts', enemy: 'Dormammu' }
+    ];
+
+    await Promise.all(newAvengers.map(avenger => request(server).post('/avengers').send(avenger)));
+
+    const response = await request(server).get('/avengers');
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBeGreaterThan(6); // 6 initial + 2 new avengers
+  });
+
+  it('should update an avenger with valid data', async () => {
+    const updatedAvengerData = {
+      name: 'Ironman Updated',
+      superpower: 'Genius-level intellect with Updated Powered Armor',
+      enemy: 'Updated The Mandarin'
+    };
+  
+    const response = await request(server)
+      .put('/avengers/1')
+      .send(updatedAvengerData);
+  
+    expect(response.status).toBe(200);
+    expect(response.body.name).toBe('Ironman Updated');
+    expect(response.body.superpower).toBe('Genius-level intellect with Updated Powered Armor');
+    expect(response.body.enemy).toBe('Updated The Mandarin');
+  });
+  
+  it('should return 400 for updating an avenger with invalid data', async () => {
+    const updatedAvengerData = {
+      // Missing required 'superpower' field
+      name: 'Ironman Updated',
+      enemy: 'Updated The Mandarin'
+    };
+  
+    const response = await request(server)
+      .put('/avengers/1')
+      .send(updatedAvengerData);
+  
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('Missing required fields');
+  });
+})
+

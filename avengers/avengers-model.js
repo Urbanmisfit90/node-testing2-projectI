@@ -1,7 +1,7 @@
 const db = require("../data/db-config");
 
 function getAllAvengers() {
-  return db('avengers').select('id', 'name', 'superpower', 'enemy');
+  return db("avengers").select("id", "name", "superpower", "enemy");
 }
 
 function getAvengerById(id) {
@@ -9,7 +9,7 @@ function getAvengerById(id) {
 }
 
 function createAvenger(avengerData) {
-  return db("avengers").insert(avengerData).returning('id'); // Ensure returning ID
+  return db("avengers").insert(avengerData).returning("id"); // Ensure returning ID
 }
 
 function updateAvenger(id, avengerData) {
