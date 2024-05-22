@@ -148,8 +148,8 @@ describe('Avengers API', () => {
       .put('/avengers/1')
       .send(updatedAvengerData);
   
-    expect(response.status).toBe(400);
-    expect(response.body.message).toBe('Missing required fields');
+    expect(response.status).toBe(400); // Change status expectation to 400
+    expect(response.body.message).toBe("Missing required 'superpower' field"); // Check for correct error message
   });
 })
 
